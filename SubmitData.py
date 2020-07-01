@@ -12,7 +12,10 @@ def submit_data(filename):
     with open(filename, "r", encoding="utf-8") as song_file:
         song_data = json.load(song_file)
 
-    URL = "http://localhost:9200/sinhala_songs/_doc/"
+    with open("conf.json", "r") as conf:
+        URL = json.load(conf)["URL"]
+
+    URL += "/sinhala_songs/_doc/"
     for song in song_data:
         r = requests.post(url=URL, json=song)
         print(r.json())

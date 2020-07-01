@@ -132,14 +132,14 @@ def _prepare_query_params(q, filters, cls):
     return body
 
 
-def _search_index(params):
+def _search_index(params, URL):
     """
     Search ElasticSearch index using given parameters
     :param params: ElasticSearch Search API query parameters
     :return: HTTP POST response
     """
-    URL = "http://localhost:9200/sinhala_songs/_search/"
-    print(json.dumps(params, ensure_ascii=False))
+    URL += "/sinhala_songs/_doc/"
+    # print(json.dumps(params, ensure_ascii=False))
     r = requests.post(url=URL, json=params)
 
     return r.json()
@@ -190,6 +190,9 @@ def _display_results(results, filters, cls):
 
 
 def get_query():
+    with open("conf.json", "r") as conf:
+        URL = json.load(conf)["URL"]
+
     while True:
         input_str = input("What would you like to search? ")
         input_arr = [str(item).strip() for item in input_str.split("-")]
@@ -204,7 +207,7 @@ def get_query():
 
         params = _prepare_query_params(q, filters, cls)
 
-        results = _search_index(params)
+        results = _search_index(params, URL)
 
         _display_results(results, filters, cls)
 
